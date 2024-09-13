@@ -1,0 +1,3 @@
+unicornhatmini
+RPi.GPIO
+pillow
