@@ -1,11 +1,11 @@
 import threading
 import time
-import RPi.GPIO as GPIO
 from queue import Queue, Empty
 
-from globals import BUTTON_MAP, ACTION_QUEUE, MENU_QUEUE, LONG_PRESS_DURATION, RELEASE_WAIT_TIME, TEXT_DISPLAY
-from menu import Menu
+import RPi.GPIO as GPIO
 
+from globals import BUTTON_MAP, ACTION_QUEUE, MENU_QUEUE, LONG_PRESS_DURATION, RELEASE_WAIT_TIME, DISPLAY
+from menu import Menu
 
 GPIO.setmode(GPIO.BCM)
 EVENT_QUEUE = Queue()
@@ -101,7 +101,7 @@ def main_program():
     detector_thread.start()
 
     # Start the menu thread
-    menu = Menu(MENU_QUEUE, ACTION_QUEUE, TEXT_DISPLAY)
+    menu = Menu(MENU_QUEUE, ACTION_QUEUE, DISPLAY)
     menu_thread = threading.Thread(target=menu.run)
     menu_thread.daemon = True
     menu_thread.start()
@@ -117,8 +117,7 @@ def main_program():
         detector_thread.join()
         menu.stop()
         menu_thread.join()
-
-        TEXT_DISPLAY.stop_display()
+        DISPLAY.stop()
 
 
 if __name__ == "__main__":

@@ -1,24 +1,26 @@
 import threading
 import time
 
+from reaction_game import ReactionLevelOne
 from actions import Action1, Action2
 from demo import GraphicsDemoAction
+from display import Display
 
 
 class Menu:
-    def __init__(self, menu_queue, action_queue, text_display):
-        self.menu_map = {"Show Buttons Pressed": Action1, "Action2": Action2, "Demo": GraphicsDemoAction}
+    def __init__(self, menu_queue, action_queue, display: Display):
+        self.menu_map = {"Show Buttons Pressed": Action1, "Action2": Action2, "Reaktionsspiel - 1": ReactionLevelOne,"Demo": GraphicsDemoAction}
         self.menu_items = list(self.menu_map)
         self.current_index = 0
         self.menu_queue = menu_queue
         self.action_queue = action_queue
-        self.text_display = text_display
+        self.display = display
         self.running = True
         self.current_action_thread = None
         self.current_action = None
 
     def run(self):
-        self.text_display.start_display(self.menu_items[self.current_index])
+        self.display.start_text_in_loop(self.menu_items[self.current_index])
         while self.running:
             if not self.menu_queue.empty():
                 button_event = self.menu_queue.get()
@@ -40,19 +42,18 @@ class Menu:
             self.select_action()
 
     def move_up(self):
-        self.text_display.stop_display()
+        self.display.stop_text_in_loop()
         self.current_index = (self.current_index - 1) % len(self.menu_items)
-        self.text_display.start_display(self.menu_items[self.current_index])
+        self.display.start_text_in_loop(self.menu_items[self.current_index])
 
     def move_down(self):
-        self.text_display.stop_display()
+        self.display.stop_text_in_loop()
         self.current_index = (self.current_index + 1) % len(self.menu_items)
-        self.text_display.start_display(self.menu_items[self.current_index])
+        self.display.start_text_in_loop(self.menu_items[self.current_index])
 
     def select_action(self):
-        selected_action = self.menu_items[self.current_index]
-        self.text_display.stop_display()
-        self.run_action(selected_action)
+        self.display.stop_text_in_loop()
+        self.run_action(self.menu_items[self.current_index])
 
     def run_action(self, action_name):
         if self.current_action_thread and self.current_action_thread.is_alive():
@@ -73,10 +74,8 @@ class Menu:
             if self.current_action_thread and self.current_action_thread.is_alive():
                 self.current_action_thread.join()
 
-        if self.text_display.display_running:
-            self.text_display.stop_display()
-
-        self.text_display.start_display(self.menu_items[self.current_index])
+        # self.text_display.stop()
+        self.display.start_text_in_loop(self.menu_items[self.current_index])
 
     def stop(self):
         self.stop_action()

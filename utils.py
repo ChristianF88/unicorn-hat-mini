@@ -1,6 +1,7 @@
+import numpy as np
 from PIL import ImageFont, ImageDraw, Image
 from numpy.lib.stride_tricks import as_strided
-import numpy as np
+
 
 def empty_queue(queue):
     while not queue.empty():
@@ -14,7 +15,7 @@ def get_text_size(font: ImageFont, text):
         return font.font.getsize(text)[0]
 
 
-def text_to_image(text, display_w = 17, display_h = 7, font=ImageFont.truetype("5x7.ttf", 8)):
+def text_to_image(text, display_w=17, display_h=7, font=ImageFont.truetype("5x7.ttf", 8)):
     text_width, text_height = get_text_size(font, text)
     # 2 * display width for padding
     image = Image.new('P', (text_width + 2 * display_w, display_h), 0)
@@ -32,18 +33,18 @@ def extract_windows(array, window_width=17, window_height=7):
 
 
 def image_to_arrays(image: Image, desired_width=17, short_padding=5, short_factor=1.5):
-    array= np.asarray(image)
+    array = np.asarray(image)
     aw = array.shape[1]
     padding = 2 * desired_width
     if (img_size := (aw - padding)) < desired_width:  # text can be on the display without movement
         if (req_padding := (desired_width - img_size)) % 2 == 0:
             padding = req_padding // 2
-            return [array[:, (desired_width-padding):-(desired_width-padding)]]
+            return [array[:, (desired_width - padding):-(desired_width - padding)]]
         else:
             padding = int(req_padding / 2)
-            return [array[:, (desired_width-padding-1):-(desired_width-padding)]]
+            return [array[:, (desired_width - padding - 1):-(desired_width - padding)]]
     elif (aw - padding) < short_factor * desired_width:  # changed padding for short text
-        boundaries = (desired_width-short_padding)
-        return extract_windows(array[:,boundaries:-boundaries], desired_width)  # long text
+        boundaries = (desired_width - short_padding)
+        return extract_windows(array[:, boundaries:-boundaries], desired_width)  # long text
     else:
         return extract_windows(array, desired_width)

@@ -1,13 +1,14 @@
-import threading
-import time
 import colorsys
 import math
-from unicornhatmini import UnicornHATMini
+import time
+
+from globals import UHM
+
 
 class GraphicsDemoAction:
-    def __init__(self, action_queue=None, display=None):
+    def __init__(self, action_queue=None):
         self.action_queue = action_queue
-        self.unicornhatmini = UnicornHATMini()
+        self.unicornhatmini = UHM
         self.unicornhatmini.set_brightness(0.1)
         self.unicornhatmini.set_rotation(0)
         self.u_width, self.u_height = self.unicornhatmini.get_shape()
@@ -131,4 +132,3 @@ class GraphicsDemoAction:
     def stop(self):
         self.running = False
         print("Stopping Graphics Demo")
-
