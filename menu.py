@@ -1,15 +1,17 @@
 import threading
 import time
 
-from reaction_game import ReactionLevelOne
 from actions import Action1, Action2
 from demo import GraphicsDemoAction
 from display import Display
+from reaction_game import ReactionLevelOne, ReactionLevelTwo
 
 
 class Menu:
     def __init__(self, menu_queue, action_queue, display: Display):
-        self.menu_map = {"Show Buttons Pressed": Action1, "Action2": Action2, "Reaktionsspiel - 1": ReactionLevelOne,"Demo": GraphicsDemoAction}
+        self.menu_map = {"Show Buttons Pressed": Action1, "Action2": Action2, "Reaktionsspiel-1": ReactionLevelOne,
+                         "Reaktionsspiel-2": ReactionLevelTwo,
+                         "Demo": GraphicsDemoAction}
         self.menu_items = list(self.menu_map)
         self.current_index = 0
         self.menu_queue = menu_queue
@@ -34,11 +36,11 @@ class Menu:
         combination = button_event['combination']
         press_type = button_event['press_type']
 
-        if combination == 'X' and press_type == "single":
+        if combination == 'X' and press_type == "short":
             self.move_up()
-        elif combination == 'Y' and press_type == "single":
+        elif combination == 'Y' and press_type == "short":
             self.move_down()
-        elif combination == 'A' and press_type == "single":
+        elif combination == 'A' and press_type == "short":
             self.select_action()
 
     def move_up(self):

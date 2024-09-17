@@ -1,0 +1,13 @@
+[Unit]
+Description=Your Python Program Service
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/unicorn-hat-mini
+ExecStart=/home/pi/unicorn-hat-mini/venv/bin/python /home/pi/unicorn-hat-mini/main.py
+Restart=on-failure
+Environment="PATH=/home/pi/unicorn-hat-mini/venv/bin"
+
+[Install]
+WantedBy=multi-user.target

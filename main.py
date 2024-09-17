@@ -35,7 +35,7 @@ def button_listener():
                 button_states[name]['pressed'] = False
                 button_states[name]['press_time'] = None
 
-        time.sleep(0.01)  # Sleep briefly to reduce CPU usage
+        time.sleep(0.005)  # Sleep briefly to reduce CPU usage
 
 
 def event_detector():
@@ -61,31 +61,27 @@ def event_detector():
 
 
 def event_analysis(event_log, long_press_duration=LONG_PRESS_DURATION):
-    result = {'combination': None, 'press_type': 'single', 'stop_action': False}
+    result = {'combination': None, 'press_type': 'short', 'stop_action': False, "press_time": None}
 
     # Sort button press events by press time to maintain the correct order
     event_log.sort(key=lambda e: e['press_time'])
+    min_press_time = event_log[0]["press_time"]
 
-    pressed_buttons = sorted({e['button'] for e in event_log})
-    combination_key = ''.join(pressed_buttons)
-    result['combination'] = combination_key
-
-    # Determine if a long press occurred
+    pressed_buttons = set()
     long_press_detected = False
     for event in event_log:
-        if event['duration'] >= long_press_duration:
+        pressed_buttons.add(event['button'])
+        if not long_press_detected and event['duration'] >= long_press_duration:
             result['press_type'] = 'long'
             long_press_detected = True
-            break
 
-    if not long_press_detected:
-        result['press_type'] = 'single'  # Default to single press if no long press detected
+    result['combination'] = ''.join(sorted(pressed_buttons))
 
-    # Special case: if all four buttons are pressed and held long, stop the action
-    if all(button in pressed_buttons for button in ['A', 'B', 'X', 'Y']) and result['press_type'] == 'long':
+    if result['combination'] == "ABXY" and long_press_detected:
         result['stop_action'] = True
+    result['press_time'] = min_press_time
 
-    print(result)  # Debugging output to verify event analysis
+    print(result)
     return result
 
 
