@@ -1,5 +1,4 @@
 import time
-from array import array
 from globals import SHUTDOWN_FLAG
 
 from shapes import Shapes
@@ -7,10 +6,6 @@ from utils import pad_array
 import numpy as np
 import random
 
-import time
-
-import time
-import numpy as np
 
 
 def generate_contrast_colors(num_colors):
@@ -95,7 +90,7 @@ def fireworks(display, pause=0.01, num_bursts=20, num_colors=4):
 
 
 class Animation:
-    def __init__(self, display, shapes):
+    def __init__(self, display, shapes=Shapes()):
         self.shapes = shapes
         self.display = display
 
@@ -156,5 +151,4 @@ class Animation:
 
 if __name__ == "__main__":
     from globals import DISPLAY
-    from shapes import Shapes
     Animation(DISPLAY, Shapes()).demo()

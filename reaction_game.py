@@ -4,6 +4,7 @@ from random import choice, uniform
 import numpy as np
 
 from globals import DISPLAY, LIVES_IN_GAME
+from animations import Animation
 from utils import empty_queue
 
 def vary_randomly(value, _range=0.5):
@@ -12,10 +13,11 @@ def vary_randomly(value, _range=0.5):
 
 
 class ReactionLevelOne:
-    def __init__(self, action_queue, display=DISPLAY):
+    def __init__(self, action_queue, display=DISPLAY, animation = Animation):
         self.action_queue = action_queue
         self.running = True
         self.display = display
+        self.animation = animation(display)
         self.display_array = np.full((7, 17), False)  # that's the screen resolution
         self.blinking_positions = {
             "A": ([1, 1, 2, 2], [1, 2, 1, 2]),
@@ -33,19 +35,17 @@ class ReactionLevelOne:
         self.start_sequence_ran = True
 
     def run(self, pause_between_challenges=1.5, valid_reaction_time=0.45, failure_screen_time=0.5, winning=15):
-        used_lives = 0
+        lives = LIVES_IN_GAME
         winning_count = 0
         while self.running:
             if not self.start_sequence_ran:
                 self.start_sequence()
-            if used_lives == LIVES_IN_GAME:
-                self.display.blink_time(color_cycles=0, color=(255, 0, 0))
+            if lives == 0:
                 self.display.start_text_in_loop("Long press ABXY to exit!")
                 break
 
             if winning_count == winning:
-                self.display.blink_time(color_cycles=0, color=(0, 255, 0))
-                self.display.show_image(np.full((7, 17), True), color=(0, 255, 0))
+                self.animation.winning()
                 self.display.start_text_in_loop("Long press ABXY to exit!")
                 break
 
@@ -66,9 +66,8 @@ class ReactionLevelOne:
             reaction_time = button_press["press_time"] - blink_start
             print("TIME:", reaction_time)
             if reaction_time > valid_reaction_time:
-                used_lives += 1
-                self.display.show_image(np.full((7, 17), True))
-                time.sleep(0.5)
+                lives -= 1
+                self.animation.life_lost(lives)
                 self.display.clear_leds()
 
                 time.sleep(pause_between_challenges - failure_screen_time)
@@ -78,7 +77,8 @@ class ReactionLevelOne:
                 winning_count += 1
                 to_display = str(reaction_time)[:3]
             else:
-                used_lives += 1
+                lives -= 1
+                self.animation.life_lost(lives)
                 to_display = "NO!"
 
             self.display.show_text(to_display)
@@ -91,10 +91,11 @@ class ReactionLevelOne:
 
 
 class ReactionLevelTwo:
-    def __init__(self, action_queue, display=DISPLAY):
+    def __init__(self, action_queue, display=DISPLAY, animation=Animation):
         self.action_queue = action_queue
         self.running = True
         self.display = display
+        self.animation = animation(display)
         self.display_array = np.full((7, 17), False)  # that's the screen resolution
         self.blinking_positions = {
             "A": ([1, 1, 2, 2], [1, 2, 1, 2]),
@@ -113,13 +114,12 @@ class ReactionLevelTwo:
         self.start_sequence_ran = True
 
     def run(self, pause_between_challenges=1.5, valid_reaction_time=0.5, failure_screen_time=0.3, blink_time=1, winning=15):
-        used_lives = 0
+        lives = LIVES_IN_GAME
         winning_count = 0
         while self.running:
             if not self.start_sequence_ran:
                 self.start_sequence()
-            if used_lives == LIVES_IN_GAME:
-                self.display.blink_time(color_cycles=0, color=(255, 0, 0))
+            if lives == 0:
                 self.display.start_text_in_loop("Long press ABXY to exit!")
                 break
 
@@ -140,7 +140,6 @@ class ReactionLevelTwo:
             timeout = False
             while self.running and self.action_queue.empty() and not timeout:
                 timeout = (time.time() - blink_start) > blink_time
-                print(timeout)
                 time.sleep(0.005)
 
             if timeout:
@@ -155,9 +154,8 @@ class ReactionLevelTwo:
             reaction_time = button_press["press_time"] - blink_start
             print("TIME:", reaction_time)
             if reaction_time > valid_reaction_time:
-                used_lives += 1
-                self.display.show_image(np.full((7, 17), True))
-                time.sleep(failure_screen_time)
+                lives -= 1
+                self.animation.life_lost(lives)
                 self.display.clear_leds()
 
                 time.sleep(vary_randomly(pause_between_challenges - failure_screen_time))
@@ -167,7 +165,8 @@ class ReactionLevelTwo:
                 winning_count += 1
                 to_display = str(reaction_time)[:3]
             else:
-                used_lives += 1
+                lives -= 1
+                self.animation.life_lost(lives)
                 to_display = "NO!"
 
             self.display.show_text(to_display)
