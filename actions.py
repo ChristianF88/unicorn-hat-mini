@@ -50,4 +50,4 @@ class Action2:
     def stop(self):
         self.running = False
         self.display.stop_text_in_loop()
-        time.sleep(0.01)
+        time.sleep(0.05)

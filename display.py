@@ -5,7 +5,7 @@ import time
 import numpy as np
 from unicornhatmini import UnicornHATMini
 
-from utils import text_to_image, image_to_arrays
+from utils import text_to_image, image_to_arrays, pad_array
 
 
 def get_color_cycler(cycles=10):
@@ -24,20 +24,44 @@ def get_color_cycler(cycles=10):
 class Display:
     def __init__(self, unicornhat_instance: UnicornHATMini, brightness=0.05):
         self.uh = unicornhat_instance
-        self.uh.set_brightness(brightness)
+        self.default_brightness = brightness
+        self.uh.set_brightness(self.default_brightness)
         self.lock = threading.Lock()
         self.w = 17
         self.h = 7
         self.cycling_text = False
         self.display_thread = None
 
-    def show_image(self, array, color=(255, 0, 0)):
+    def show_image(self, array, color=(255, 0, 0), padding=False):
         with self.lock:
+            if padding:
+                array = pad_array(array, self.w)
+
             self.uh.clear()
             for w in range(self.w):
                 for h in range(self.h):
                     if array[h, w]:
                         self.uh.set_pixel(w, h, *color)
+            self.uh.show()
+
+    def show_image_color_each_led(self, array, color):
+        """
+        Displays the image on the LED matrix with individual colors per pixel.
+
+        Parameters:
+        - array: 2D boolean numpy array where `True` means the LED is on.
+        - color: 3D numpy array of shape (height, width, 3) where each element is an (R, G, B) tuple.
+        """
+        with self.lock:
+            self.uh.clear()
+
+            assert array.shape == color.shape[:2], "Array and color dimensions must match."
+
+            for w in range(self.w):
+                for h in range(self.h):
+                    if array[h, w]:
+                        r, g, b = color[h, w]
+                        self.uh.set_pixel(w, h, int(r), int(g), int(b))
             self.uh.show()
 
     def show_text(self, text, movement_delay=0.2, color=(255, 0, 0), color_cycles=0, cycles=1):

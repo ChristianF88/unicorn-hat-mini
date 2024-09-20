@@ -48,3 +48,11 @@ def image_to_arrays(image: Image, desired_width=17, short_padding=5, short_facto
         return extract_windows(array[:, boundaries:-boundaries], desired_width)  # long text
     else:
         return extract_windows(array, desired_width)
+
+
+def pad_array(array, w=17):
+    cols_padding = (
+        (w - array.shape[1]) // 2,
+        (w - array.shape[1]) - (w - array.shape[1]) // 2
+    )  # equal padding left and right
+    return np.pad(array, ((0, 0), cols_padding), mode='constant', constant_values=False)

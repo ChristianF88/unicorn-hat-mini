@@ -1,10 +1,11 @@
 import threading
 import time
+import signal
 from queue import Queue, Empty
 
 import RPi.GPIO as GPIO
 
-from globals import BUTTON_MAP, ACTION_QUEUE, MENU_QUEUE, LONG_PRESS_DURATION, RELEASE_WAIT_TIME, DISPLAY
+from globals import BUTTON_MAP, ACTION_QUEUE, MENU_QUEUE, LONG_PRESS_DURATION, RELEASE_WAIT_TIME, DISPLAY, SHUTDOWN_FLAG
 from menu import Menu
 
 GPIO.setmode(GPIO.BCM)
@@ -15,11 +16,14 @@ for pin in BUTTON_MAP.keys():
     GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 button_states = {name: {'press_time': None, 'pressed': False} for name in BUTTON_MAP.values()}
-shutdown_flag = threading.Event()
 
+
+def handle_shutdown(signum, frame):
+    global SHUTDOWN_FLAG
+    SHUTDOWN_FLAG.set()
 
 def button_listener():
-    while not shutdown_flag.is_set():
+    while not SHUTDOWN_FLAG.is_set():
         for pin, name in BUTTON_MAP.items():
             if GPIO.input(pin) == GPIO.LOW and not button_states[name]['pressed']:
                 # Button is pressed, record press time and mark as pressed
@@ -39,7 +43,7 @@ def button_listener():
 
 
 def event_detector():
-    while not shutdown_flag.is_set():
+    while not SHUTDOWN_FLAG.is_set():
         event_log = []
         start_time = time.time()
 
@@ -86,6 +90,10 @@ def event_analysis(event_log, long_press_duration=LONG_PRESS_DURATION):
 
 
 def main_program():
+
+    signal.signal(signal.SIGTERM, handle_shutdown)
+    signal.signal(signal.SIGINT, handle_shutdown)
+
     # Start the button listener thread
     button_thread = threading.Thread(target=button_listener)
     button_thread.daemon = True
@@ -103,11 +111,13 @@ def main_program():
     menu_thread.start()
 
     try:
-        while True:
+        while not SHUTDOWN_FLAG.is_set():
             time.sleep(1)  # Main loop can handle other tasks or be replaced as needed
-    except KeyboardInterrupt:
-        print("Exiting...")
-        shutdown_flag.set()  # Signal all threads to stop
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        print("Shutting down...")
+        SHUTDOWN_FLAG.set()  # Signal all threads to stop
 
         button_thread.join()
         detector_thread.join()
