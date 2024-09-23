@@ -37,8 +37,10 @@ class Maze:
         constant_values=False
     )
 
-    def window(self, m, n):  # m - height, n - width
-        return self.maze[
+    def window(self, m, n, maze=None):  # m - height, n - width
+        if maze is None:
+            maze = self.maze
+        return maze[
                (m-self.padding_vertical-1):(m+self.padding_vertical+2),
                (n-self.padding_horizontal):(n+self.padding_horizontal+1)
         ]
@@ -61,7 +63,7 @@ class Maze:
             visited.add(current)
             self.display.show_image(self.window(*current))
             self.display.turn_on_led(8, 3, (0, 0, 255))
-            time.sleep(0.05)  # Delay to visualize the search process
+            time.sleep(0.0001)  # Delay to visualize the search process
 
             if current == padded_end:
                 break
@@ -86,7 +88,7 @@ class Maze:
                     path[next_position] = current
 
         if display_solution:
-            time.sleep(1)
+            time.sleep(0.5)
             solution_path = []
             while current != current_position:
                 solution_path.append(current)
@@ -94,10 +96,18 @@ class Maze:
             solution_path.append(current_position)
             solution_path.reverse()
 
-            for position in solution_path:
-                self.display.show_image(self.window(*position))
-                self.display.turn_on_led(8, 3, (255, 255, 0))
-                time.sleep(0.4)  # Pause to visualize the solution
+            maze = self.maze.copy()
+            h, w = maze.shape
+            colors = np.full((h, w, 3), (255, 0, 0))
+
+            pm, pn = solution_path[0]
+            for m, n in solution_path:
+                maze[m ,n] = True
+                colors[pm, pn] =  (0, 0, 255)  # covered path
+                colors[m, n] = (0, 255, 0)
+                self.display.show_image_color_each_led(self.window(m, n, maze), self.window(m, n, colors))
+                pm, pn = m, n
+                time.sleep(0.1)  # Pause to visualize the solution
             return solution_path
 
 

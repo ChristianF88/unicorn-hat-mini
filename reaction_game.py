@@ -64,7 +64,6 @@ class ReactionLevelOne:
 
             button_press = self.action_queue.get()
             reaction_time = button_press["press_time"] - blink_start
-            print("TIME:", reaction_time)
             if reaction_time > valid_reaction_time:
                 lives -= 1
                 self.animation.life_lost(lives)
@@ -151,7 +150,6 @@ class ReactionLevelTwo:
 
             button_press = self.action_queue.get()
             reaction_time = button_press["press_time"] - blink_start
-            print("TIME:", reaction_time)
             if reaction_time > valid_reaction_time:
                 lives -= 1
                 self.animation.life_lost(lives)
