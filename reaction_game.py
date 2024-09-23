@@ -34,7 +34,7 @@ class ReactionLevelOne:
             time.sleep(count_down_time)
         self.start_sequence_ran = True
 
-    def run(self, pause_between_challenges=1.5, valid_reaction_time=0.45, failure_screen_time=0.5, winning=15):
+    def run(self, pause_between_challenges=1.5, valid_reaction_time=0.5, failure_screen_time=0.5, winning=15):
         lives = LIVES_IN_GAME
         winning_count = 0
         while self.running:

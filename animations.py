@@ -106,7 +106,7 @@ class Animation:
         if clear_after:
             self.display.clear_leds()
 
-    def life_lost(self, life_count, long_display=0.6, short_display=0.4, display_off=0.1, blinks=3):
+    def life_lost(self, life_count, long_display=0.6, short_display=0.4, display_off=0.1, blinks=4):
         """
         full to 2/3
         2/3 to 1/3
@@ -126,7 +126,7 @@ class Animation:
             _blinks += 1
             self.display.show_image(_map[life_count], padding=True)
             time.sleep(short_display)
-            if _blinks != blinks -1:
+            if _blinks != blinks:
                 self.display.clear_leds()
                 time.sleep(display_off)
 
@@ -146,6 +146,8 @@ class Animation:
             self.life_lost(i)
             self.display.clear_leds()
             time.sleep(1)
+
+
 
 
 

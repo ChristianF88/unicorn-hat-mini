@@ -4,12 +4,13 @@ import time
 from actions import Action1, Action2
 from demo import GraphicsDemoAction
 from display import Display
+from maze import init_maze
 from reaction_game import ReactionLevelOne, ReactionLevelTwo
 
 
 class Menu:
     def __init__(self, menu_queue, action_queue, display: Display):
-        self.menu_map = {"Show Buttons Pressed": Action1, "Action2": Action2, "Reaktionsspiel-1": ReactionLevelOne,
+        self.menu_map = {"Show Buttons Pressed": Action1, "Maze-1": init_maze(level=1), "Maze-2": init_maze(level=2), "Maze-3": init_maze(level=3), "Reaktionsspiel-1": ReactionLevelOne,
                          "Reaktionsspiel-2": ReactionLevelTwo,
                          "Demo": GraphicsDemoAction}
         self.menu_items = list(self.menu_map)

@@ -1,3 +1,5 @@
+import functools
+
 import numpy as np
 from PIL import ImageFont, ImageDraw, Image
 from numpy.lib.stride_tricks import as_strided
@@ -56,3 +58,9 @@ def pad_array(array, w=17):
         (w - array.shape[1]) - (w - array.shape[1]) // 2
     )  # equal padding left and right
     return np.pad(array, ((0, 0), cols_padding), mode='constant', constant_values=False)
+
+
+def partial_class(cls, *args, **kwds):
+    class NewCls(cls):
+        __init__ = functools.partialmethod(cls.__init__, *args, **kwds)
+    return NewCls

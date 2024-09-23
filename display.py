@@ -32,6 +32,10 @@ class Display:
         self.cycling_text = False
         self.display_thread = None
 
+    def turn_on_led(self, w, h, color):
+        self.uh.set_pixel(w, h, *color)
+        self.uh.show()
+
     def show_image(self, array, color=(255, 0, 0), padding=False):
         with self.lock:
             if padding:
