@@ -48,7 +48,7 @@ class Display:
                         self.uh.set_pixel(w, h, *color)
             self.uh.show()
 
-    def show_image_color_each_led(self, array, color):
+    def show_image_color_each_led(self, array, color, padding=False):
         """
         Displays the image on the LED matrix with individual colors per pixel.
 
@@ -57,6 +57,8 @@ class Display:
         - color: 3D numpy array of shape (height, width, 3) where each element is an (R, G, B) tuple.
         """
         with self.lock:
+            if padding:
+                array = pad_array(array, self.w)
             self.uh.clear()
 
             assert array.shape == color.shape[:2], "Array and color dimensions must match."

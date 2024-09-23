@@ -19,3 +19,8 @@ DISPLAY = Display(UHM)
 
 
 SHUTDOWN_FLAG = threading.Event()
+
+TEXT = {
+    "ABXY": f"ABXY>{LONG_PRESS_DURATION}s",
+
+}

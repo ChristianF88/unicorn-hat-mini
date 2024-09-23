@@ -1,10 +1,14 @@
 import random
+from multiprocessing.dummy import current_process
+
 import numpy as np
 
-random.seed(11)
 
+def generate_maze(width, height, seed):
+    random.seed(seed)
+    assert width%2==1, "width must be uneven!"
+    assert height % 2 == 1, "height must be uneven!"
 
-def generate_maze(width, height,  ):
     dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
     maze = np.ones((height, width), dtype=np.bool_)
 
@@ -30,9 +34,9 @@ def display_maze(maze):
     for row in display:
         print(''.join(row))
 
-def save_maze(level=1, _print=True):
-    width, height = level*10, level*10
-    maze = generate_maze(width, height)
+def save_maze(level=1, _print=True, seed=1):
+    width, height = level*10 + 1, level*10 + 1
+    maze = generate_maze(width, height, seed)
     display_maze(maze)
     if _print:
         print(repr(maze))
@@ -40,4 +44,5 @@ def save_maze(level=1, _print=True):
 
 
 if __name__ == "__main__":
-    save_maze(level=5)
+    for i in range(9)[1:]:
+        save_maze(level=i, seed=i)

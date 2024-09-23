@@ -10,11 +10,27 @@ from reaction_game import ReactionLevelOne, ReactionLevelTwo
 
 class Menu:
     def __init__(self, menu_queue, action_queue, display: Display):
-        self.menu_map = {"Show Buttons Pressed": Action1, "Maze-1": init_maze(level=1), "Maze-2": init_maze(level=2), "Maze-3": init_maze(level=3), "Reaktionsspiel-1": ReactionLevelOne,
-                         "Reaktionsspiel-2": ReactionLevelTwo,
-                         "Demo": GraphicsDemoAction}
-        self.menu_items = list(self.menu_map)
-        self.current_index = 0
+        self.menu_map = {
+            "Labyrinth": {
+                f"Lvl-{i}":init_maze(level=i) for i in range(10)[1:]
+            },
+            "Reaktion": {
+                "Lvl-1": ReactionLevelOne,
+                "Lvl-2": ReactionLevelTwo
+            },
+            "Demo": { "Bling-bling":
+                GraphicsDemoAction
+            },
+            "Testing": {
+                "Action1": Action1,
+                "Action2": Action2
+            }
+        }
+        self.menu_list_main = list(self.menu_map)
+        self.menu_list_sub = [list(sub) for sub in self.menu_map.values()]
+        self.menu_indices = [0, 0]  # index for main, and sub
+        self.menu_idx = 0  # main menu
+
         self.menu_queue = menu_queue
         self.action_queue = action_queue
         self.display = display
@@ -22,8 +38,27 @@ class Menu:
         self.current_action_thread = None
         self.current_action = None
 
+    def select_menu(self):
+        if self.menu_idx == 0:
+            return self.menu_list_main
+        else:
+            return self.menu_list_sub[self.menu_indices[0]]
+
+    def select_text(self):
+        if self.menu_idx == 0:
+            return self.menu_list_main[self.menu_indices[0]]
+        else:
+            return self.menu_list_sub[self.menu_indices[0]][self.menu_indices[1]]
+
+    def select_action(self):
+        return self.menu_map.get(
+            self.menu_list_main[self.menu_indices[0]]
+        ).get(
+            self.menu_list_sub[self.menu_indices[0]][self.menu_indices[1]]
+        )
+
     def run(self):
-        self.display.start_text_in_loop(self.menu_items[self.current_index])
+        self.display.start_text_in_loop(self.menu_list_main[self.menu_indices[self.menu_idx]])
         while self.running:
             if not self.menu_queue.empty():
                 button_event = self.menu_queue.get()
@@ -42,27 +77,42 @@ class Menu:
         elif combination == 'Y' and press_type == "short":
             self.move_down()
         elif combination == 'A' and press_type == "short":
-            self.select_action()
+            self.enter()
+        elif combination == 'B' and press_type == "short":
+            self.back()
+
+    def _move(self, by=1):
+        self.display.stop_text_in_loop()
+        self.menu_indices[self.menu_idx] = (self.menu_indices[self.menu_idx] + by) % len(self.select_menu())
+        self.display.start_text_in_loop(self.select_text())
 
     def move_up(self):
-        self.display.stop_text_in_loop()
-        self.current_index = (self.current_index - 1) % len(self.menu_items)
-        self.display.start_text_in_loop(self.menu_items[self.current_index])
+        self._move(-1)
 
     def move_down(self):
-        self.display.stop_text_in_loop()
-        self.current_index = (self.current_index + 1) % len(self.menu_items)
-        self.display.start_text_in_loop(self.menu_items[self.current_index])
+        self._move(1)
 
-    def select_action(self):
+    def enter(self):
         self.display.stop_text_in_loop()
-        self.run_action(self.menu_items[self.current_index])
+        if self.menu_idx == 0:
+            self.menu_idx = 1
+            self.display.start_text_in_loop(self.select_text())
+        elif self.menu_idx == 1:
+            self.run_action(self.select_action())
 
-    def run_action(self, action_name):
+    def back(self):
+        if self.menu_idx == 1:
+            self.menu_idx = 0
+            self.menu_indices[1] = 0
+            self.display.stop_text_in_loop()
+            self.display.start_text_in_loop(self.select_text())
+
+
+    def run_action(self, action):
         if self.current_action_thread and self.current_action_thread.is_alive():
             self.stop_action()
 
-        self.current_action = self.menu_map.get(action_name)
+        self.current_action = action
 
         if self.current_action:
             self.current_action = self.current_action(self.action_queue)
@@ -77,8 +127,7 @@ class Menu:
             if self.current_action_thread and self.current_action_thread.is_alive():
                 self.current_action_thread.join()
 
-        # self.text_display.stop()
-        self.display.start_text_in_loop(self.menu_items[self.current_index])
+        self.display.start_text_in_loop(self.select_text())
 
     def stop(self):
         self.stop_action()

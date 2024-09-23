@@ -3,7 +3,7 @@ from random import choice, uniform
 
 import numpy as np
 
-from globals import DISPLAY, LIVES_IN_GAME
+from globals import DISPLAY, LIVES_IN_GAME, TEXT
 from animations import Animation
 from utils import empty_queue
 
@@ -41,12 +41,12 @@ class ReactionLevelOne:
             if not self.start_sequence_ran:
                 self.start_sequence()
             if lives == 0:
-                self.display.start_text_in_loop("Long press ABXY to exit!")
+                self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
 
             if winning_count == winning:
                 self.animation.winning()
-                self.display.start_text_in_loop("Long press ABXY to exit!")
+                self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
 
             button_to_blink = choice(self.can_blink)
@@ -79,7 +79,6 @@ class ReactionLevelOne:
             else:
                 lives -= 1
                 self.animation.life_lost(lives)
-                to_display = "NO!"
 
             self.display.show_text(to_display)
             time.sleep(pause_between_challenges)
@@ -120,13 +119,13 @@ class ReactionLevelTwo:
             if not self.start_sequence_ran:
                 self.start_sequence()
             if lives == 0:
-                self.display.start_text_in_loop("Long press ABXY to exit!")
+                self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
 
             if winning_count == winning:
                 self.display.blink_time(color_cycles=0, color=(0, 255, 0))
                 self.display.show_image(np.full((7, 17), True), color=(0, 255, 0))
-                self.display.start_text_in_loop("Long press ABXY to exit!")
+                self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
 
             button_to_blink = choice(self.can_blink)
@@ -167,7 +166,6 @@ class ReactionLevelTwo:
             else:
                 lives -= 1
                 self.animation.life_lost(lives)
-                to_display = "NO!"
 
             self.display.show_text(to_display)
             time.sleep(vary_randomly(pause_between_challenges))
