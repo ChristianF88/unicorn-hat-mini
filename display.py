@@ -32,6 +32,12 @@ class Display:
         self.cycling_text = False
         self.display_thread = None
 
+    def set_brightness(self, value=None):
+        if value is None:
+            self.uh.set_brightness(self.default_brightness)
+        else:
+            self.uh.set_brightness(value)
+
     def turn_on_led(self, w, h, color):
         self.uh.set_pixel(w, h, *color)
         self.uh.show()
@@ -155,6 +161,7 @@ class Display:
             self.uh.show()
 
     def stop(self):
+        self.uh.set_brightness(self.default_brightness)
         self.stop_text_in_loop()
 
 

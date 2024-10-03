@@ -4,8 +4,9 @@ import time
 from actions import Action1, Action2
 from demo import GraphicsDemoAction
 from display import Display
+from lampe import Lampe
 from maze import init_maze
-from reaction_game import ReactionLevelOne, ReactionLevelTwo
+from reaction_game import ReactionLevelOne, ReactionLevelTwo, ReactionLevelThree
 
 
 class Menu:
@@ -16,10 +17,12 @@ class Menu:
             },
             "Reaktion": {
                 "Lvl-1": ReactionLevelOne,
-                "Lvl-2": ReactionLevelTwo
+                "Lvl-2": ReactionLevelTwo,
+                "Lvl-3": ReactionLevelThree
             },
-            "Demo": { "Bling-bling":
-                GraphicsDemoAction
+            "Demo": {
+                "Bling-bling": GraphicsDemoAction,
+                "Lampe": Lampe,
             },
             "Testing": {
                 "Action1": Action1,
