@@ -44,7 +44,7 @@ class Action2:
                 button_press = self.action_queue.get()
                 self.display.stop_text_in_loop()
                 time.sleep(0.01)
-                self.display.start_text_in_loop("2" + button_press["combination"], color_cycles=5)
+                self.display.start_text_in_loop(button_press["combination"], color_cycles=5)
             time.sleep(0.02)
 
     def stop(self):
