@@ -24,9 +24,9 @@ class Menu:
                 "Bling-bling": GraphicsDemoAction,
                 "Lampe": Lampe,
             },
-            "Testing": {
-                "Action1": Action1,
-                "Action2": Action2
+            "Tests": {
+                "Knopf": Action1,
+                "Knopf-in-Farbe": Action2
             }
         }
         self.menu_list_main = list(self.menu_map)
