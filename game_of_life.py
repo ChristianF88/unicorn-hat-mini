@@ -84,22 +84,22 @@ class GameOfLife:
                     elif combo == "B":
                         self.cursor_x = (self.cursor_x + 1) % self.WIDTH
 
-                elif press == "long":
-                    if combo in ("A", "B", "X", "Y"):
-                        self.grid[self.cursor_y, self.cursor_x] = not self.grid[self.cursor_y, self.cursor_x]
-                    elif combo == "AB":
-                        # Start simulation
-                        self.setting_mode = False
-                        self.sim_paused = False
-                        empty_queue(self.action_queue)
-                        break
-                    elif combo == "XY":
-                        # Load next preset
-                        self.grid[:] = False
-                        for y, x in PRESETS[self.preset_idx]:
-                            if 0 <= y < self.HEIGHT and 0 <= x < self.WIDTH:
-                                self.grid[y, x] = True
-                        self.preset_idx = (self.preset_idx + 1) % len(PRESETS)
+                if combo == "AX":
+                    # Toggle cell at cursor
+                    self.grid[self.cursor_y, self.cursor_x] = not self.grid[self.cursor_y, self.cursor_x]
+                elif combo == "BY":
+                    # Start simulation
+                    self.setting_mode = False
+                    self.sim_paused = False
+                    empty_queue(self.action_queue)
+                    break
+                elif combo == "XY":
+                    # Load next preset
+                    self.grid[:] = False
+                    for y, x in PRESETS[self.preset_idx]:
+                        if 0 <= y < self.HEIGHT and 0 <= x < self.WIDTH:
+                            self.grid[y, x] = True
+                    self.preset_idx = (self.preset_idx + 1) % len(PRESETS)
 
                 self._render_setting()
             time.sleep(0.1)

@@ -31,8 +31,8 @@ class SpaceShooter:
         # Level-dependent settings
         self.level = level
         if level == 1:
-            self.spawn_interval = 12
-            self.meteor_speed = 3
+            self.spawn_interval = 15
+            self.meteor_speed = 6
             self.max_spawn = 1
             self.win_score = 30
         else:
@@ -143,7 +143,7 @@ class SpaceShooter:
         count = random.randint(1, self.max_spawn)
         rows_used = set()
         for _ in range(count):
-            row = random.randint(0, 6)
+            row = random.randint(1, 5)
             if row in rows_used:
                 continue
             rows_used.add(row)
@@ -185,12 +185,15 @@ class SpaceShooter:
 
     def _update_difficulty(self):
         if self.level == 1:
-            if self.score >= 20:
+            if self.score >= 25:
                 self.spawn_interval = 8
-                self.meteor_speed = 2
-            elif self.score >= 10:
-                self.spawn_interval = 10
                 self.meteor_speed = 3
+            elif self.score >= 15:
+                self.spawn_interval = 10
+                self.meteor_speed = 4
+            elif self.score >= 8:
+                self.spawn_interval = 12
+                self.meteor_speed = 5
         else:
             if self.score >= 40:
                 self.spawn_interval = 6
