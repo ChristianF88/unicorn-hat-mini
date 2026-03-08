@@ -46,12 +46,7 @@ class Display:
         with self.lock:
             if padding:
                 array = pad_array(array, self.w)
-
-            self.uh.clear()
-            for w in range(self.w):
-                for h in range(self.h):
-                    if array[h, w]:
-                        self.uh.set_pixel(w, h, *color)
+            self.uh.set_pixels(array, color)
             self.uh.show()
 
     def show_image_color_each_led(self, array, color, padding=False):
@@ -65,15 +60,7 @@ class Display:
         with self.lock:
             if padding:
                 array = pad_array(array, self.w)
-            self.uh.clear()
-
-            assert array.shape == color.shape[:2], "Array and color dimensions must match."
-
-            for w in range(self.w):
-                for h in range(self.h):
-                    if array[h, w]:
-                        r, g, b = color[h, w]
-                        self.uh.set_pixel(w, h, int(r), int(g), int(b))
+            self.uh.set_pixels(array, color)
             self.uh.show()
 
     def show_text(self, text, movement_delay=0.2, color=(255, 0, 0), color_cycles=0, cycles=1):
@@ -121,16 +108,19 @@ class Display:
     def update_leds(self, array=np.ones((7, 17)), incremental=False, dt_incremental=0.05, dt_func=lambda t: 0.9 ** t,
                     color=(255, 0, 255)):
         with self.lock:
-            self.uh.clear()
-            for w in range(self.w):
-                r, g, b = color
-                for h in range(self.h):
-                    if array[h, w]:
-                        self.uh.set_pixel(w, h, r, g, b)
-                        if incremental:
+            if not incremental:
+                self.uh.set_pixels(array.astype(bool), color)
+                self.uh.show()
+            else:
+                self.uh.clear()
+                for w in range(self.w):
+                    r, g, b = color
+                    for h in range(self.h):
+                        if array[h, w]:
+                            self.uh.set_pixel(w, h, r, g, b)
                             self.uh.show()
                             time.sleep(dt_func(w + h) * dt_incremental)
-            self.uh.show()
+                self.uh.show()
 
     def blink_count(self, count=20, dt_pause=0.2, dt_on=0.4, dt_func=lambda t: 0.93 ** t, color_cycles=10,
                     color=(255, 0, 255)):
