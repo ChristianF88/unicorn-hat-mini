@@ -4,9 +4,11 @@ import time
 from actions import Action1, Action2
 from demo import GraphicsDemoAction
 from display import Display
+from game_of_life import GameOfLife
 from lampe import Lampe
 from maze import init_maze
 from reaction_game import ReactionLevelOne, ReactionLevelTwo, ReactionLevelThree
+from space_shooter import init_space_shooter
 
 
 class Menu:
@@ -19,6 +21,13 @@ class Menu:
                 "Lvl-1": ReactionLevelOne,
                 "Lvl-2": ReactionLevelTwo,
                 "Lvl-3": ReactionLevelThree
+            },
+            "Space": {
+                "Lvl-1": init_space_shooter(level=1),
+                "Lvl-2": init_space_shooter(level=2),
+            },
+            "Game of Life": {
+                "Start": GameOfLife,
             },
             "Demo": {
                 "Bling-bling": GraphicsDemoAction,
