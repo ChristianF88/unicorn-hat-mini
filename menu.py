@@ -7,7 +7,15 @@ from display import Display
 from game_of_life import GameOfLife
 from lampe import Lampe
 from maze import init_maze
-from reaction_game import ReactionLevelOne, ReactionLevelTwo, ReactionLevelThree
+from reaction_game import (
+    ReactionLevelOne,
+    ReactionLevelTwo,
+    ReactionLevelThree,
+    ReactionLevelFour,
+    ReactionLevelFive,
+    ReactionLevelSix,
+    ReactionLevelSeven,
+)
 from space_shooter import init_space_shooter
 
 
@@ -20,7 +28,11 @@ class Menu:
             "Reaktion": {
                 "Lvl-1": ReactionLevelOne,
                 "Lvl-2": ReactionLevelTwo,
-                "Lvl-3": ReactionLevelThree
+                "Lvl-3": ReactionLevelThree,
+                "Lvl-4": ReactionLevelFour,
+                "Lvl-5": ReactionLevelFive,
+                "Lvl-6": ReactionLevelSix,
+                "Lvl-7": ReactionLevelSeven,
             },
             "Space": {
                 "Lvl-1": init_space_shooter(level=1),
