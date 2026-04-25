@@ -65,14 +65,14 @@ class MashDuel:
             event = self.action_queue.get()
             if event["press_type"] == "long":
                 continue
-            combo = event["combination"]
-            for ch in combo:
+            counts = event.get("press_counts") or {ch: 1 for ch in event["combination"]}
+            for ch, n in counts.items():
                 if ch in per_button:
-                    per_button[ch] += 1
+                    per_button[ch] += n
                     if ch in ("A", "B"):
-                        red += 1
+                        red += n
                     else:
-                        blue += 1
+                        blue += n
         return red, blue, per_button
 
     # ---------- LEVEL 1 ----------
@@ -151,15 +151,20 @@ class MashDuel:
         self.frame[:] = False
         self.color[:] = 0
 
+        # red side fills from left edge rightward; blue side from right edge leftward
         layout = [
-            (0, "A", self.COLOR_RED),
-            (1, "X", self.COLOR_BLUE),
-            (4, "B", self.COLOR_RED),
-            (5, "Y", self.COLOR_BLUE),
+            (0, "A", self.COLOR_RED, "left"),
+            (1, "X", self.COLOR_BLUE, "right"),
+            (4, "B", self.COLOR_RED, "left"),
+            (5, "Y", self.COLOR_BLUE, "right"),
         ]
-        for row, ch, color in layout:
+        for row, ch, color, side in layout:
             fill = int(round(min(self.counts[ch], self.target_per_bar) * (self.WIDTH - 1) / self.target_per_bar))
-            for c in range(fill + 1):
+            if side == "left":
+                cols = range(fill + 1)
+            else:
+                cols = range(self.WIDTH - 1 - fill, self.WIDTH)
+            for c in cols:
                 self.frame[row, c] = True
                 self.color[row, c] = color
 
@@ -172,12 +177,8 @@ class MashDuel:
     # ---------- COMMON ----------
 
     def _winner_screen(self, color, banner):
-        for _ in range(3):
-            self.display.show_image(np.full((self.HEIGHT, self.WIDTH), True), color=color)
-            time.sleep(0.2)
-            self.display.clear_leds()
-            time.sleep(0.15)
         self.display.show_text(banner, cycles=4, color=color)
+        self.animation.winning()
         self.display.start_text_in_loop(TEXT.get("ABXY"))
 
     def stop(self):

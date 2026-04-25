@@ -3,7 +3,7 @@ import random
 
 import numpy as np
 
-from globals import DISPLAY, LIVES_IN_GAME, TEXT
+from globals import DISPLAY, TEXT
 from animations import Animation
 from utils import empty_queue, partial_class
 
@@ -77,6 +77,7 @@ class Pong:
                 self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
             if self.ai_score >= self.win_score:
+                self.animation.death(self.animation.shapes.skull)
                 self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
 

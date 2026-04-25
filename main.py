@@ -65,21 +65,25 @@ def event_detector():
 
 
 def event_analysis(event_log, long_press_duration=LONG_PRESS_DURATION):
-    result = {'combination': None, 'press_type': 'short', 'stop_action': False, "press_time": None}
+    result = {'combination': None, 'press_type': 'short', 'stop_action': False,
+              "press_time": None, 'press_counts': {}}
 
     # Sort button press events by press time to maintain the correct order
     event_log.sort(key=lambda e: e['press_time'])
     min_press_time = event_log[0]["press_time"]
 
     pressed_buttons = set()
+    press_counts = {}
     long_press_detected = False
     for event in event_log:
         pressed_buttons.add(event['button'])
+        press_counts[event['button']] = press_counts.get(event['button'], 0) + 1
         if not long_press_detected and event['duration'] >= long_press_duration:
             result['press_type'] = 'long'
             long_press_detected = True
 
     result['combination'] = ''.join(sorted(pressed_buttons))
+    result['press_counts'] = press_counts
 
     if result['combination'] == "ABXY" and long_press_detected:
         result['stop_action'] = True

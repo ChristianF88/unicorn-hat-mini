@@ -144,8 +144,7 @@ class ReactionLevelTwo:
                 break
 
             if winning_count == winning:
-                self.display.blink_time(color_cycles=0, color=(0, 255, 0))
-                self.display.show_image(np.full((7, 17), True), color=(0, 255, 0))
+                self.animation.winning()
                 self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
 
@@ -313,8 +312,7 @@ class ReactionLevelFour:
                 break
 
             if winning_count == winning:
-                self.display.blink_time(color_cycles=0, color=(0, 255, 0))
-                self.display.show_image(np.full((7, 17), True), color=(0, 255, 0))
+                self.animation.winning()
                 self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
 
@@ -409,8 +407,7 @@ class ReactionLevelFive:
                 break
 
             if winning_count == winning:
-                self.display.blink_time(color_cycles=0, color=(0, 255, 0))
-                self.display.show_image(np.full((7, 17), True), color=(0, 255, 0))
+                self.animation.winning()
                 self.display.start_text_in_loop(TEXT.get("ABXY"))
                 break
 
