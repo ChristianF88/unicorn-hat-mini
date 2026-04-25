@@ -125,6 +125,25 @@ Ball spin: hitting the paddle off-center adds vertical velocity. Match the ball 
 
 ---
 
+## Flappy
+
+One-button reflex game. Yellow bird at column 4 falls under gravity; tap **A** to flap upward. Green pipes scroll right-to-left with a vertical gap. Pass through to score; touching a pipe, ceiling or floor ends the run.
+
+**Controls**
+| Action | Button |
+|---|---|
+| Flap | A (short) |
+
+After a death, the score is shown briefly then the exit prompt. Endurance — no win condition.
+
+### Lvl-1
+- Gap size: 3 rows. Pipe scroll: 0.4 cells/tick. Spawn every 20 ticks (~1 s).
+
+### Lvl-2
+- Gap size: 2 rows. Pipe scroll: 0.6 cells/tick. Spawn every 15 ticks.
+
+---
+
 ## Game of Life
 
 Conway's Game of Life on a 17×7 toroidal grid (edges wrap). Three sub-modes: **Edit**, **Preset Picker**, **Simulation**.

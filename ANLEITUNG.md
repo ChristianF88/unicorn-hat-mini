@@ -125,6 +125,25 @@ Ball-Spin: Wer den Ball ausserhalb der Schläger-Mitte trifft, gibt vertikale Ge
 
 ---
 
+## Flappy
+
+Ein-Tasten-Reflexspiel. Gelber Vogel in Spalte 4 fällt durch Schwerkraft; Tippen auf **A** = Flügelschlag nach oben. Grüne Röhren scrollen von rechts nach links mit vertikaler Lücke. Durchfliegen gibt Punkte; Berührung einer Röhre, der Decke oder des Bodens beendet das Spiel.
+
+**Steuerung**
+| Aktion | Taste |
+|---|---|
+| Flügelschlag | A (kurz) |
+
+Nach dem Tod wird der Punktestand kurz angezeigt, dann der Exit-Prompt. Endlosspiel — keine Siegbedingung.
+
+### Lvl-1
+- Lückengrösse: 3 Reihen. Röhren-Scroll: 0,4 Zellen/Tick. Spawn alle 20 Ticks (~1 s).
+
+### Lvl-2
+- Lückengrösse: 2 Reihen. Röhren-Scroll: 0,6 Zellen/Tick. Spawn alle 15 Ticks.
+
+---
+
 ## Game of Life
 
 Conways "Game of Life" auf einem 17×7-Torus-Gitter (Ränder wrappen). Drei Untermodi: **Editor**, **Preset-Auswahl**, **Simulation**.
