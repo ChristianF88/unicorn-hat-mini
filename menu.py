@@ -7,6 +7,7 @@ from display import Display
 from game_of_life import GameOfLife
 from lampe import Lampe
 from maze import init_maze
+from pong import init_pong
 from reaction_game import (
     ReactionLevelOne,
     ReactionLevelTwo,
@@ -37,6 +38,10 @@ class Menu:
             "Space": {
                 "Lvl-1": init_space_shooter(level=1),
                 "Lvl-2": init_space_shooter(level=2),
+            },
+            "Pong": {
+                "Lvl-1": init_pong(level=1),
+                "Lvl-2": init_pong(level=2),
             },
             "Game of Life": {
                 "Start": GameOfLife,

@@ -101,6 +101,30 @@ Side-scrolling shooter. Ship on the left, meteors fly in from the right. Shoot m
 
 ---
 
+## Pong
+
+Classic paddle game vs AI. Player paddle on the left (green), AI paddle on the right (blue), cyan ball bounces between them.
+
+**Controls**
+| Action | Button |
+|---|---|
+| Paddle up | X |
+| Paddle down | Y |
+
+Ball spin: hitting the paddle off-center adds vertical velocity. Match the ball with the paddle center to neutralize.
+
+### Lvl-1
+- Ball horizontal speed: 0.5 cells/tick. AI step interval: every 4 ticks (slow).
+- Win: 5 points.
+
+### Lvl-2
+- Ball horizontal speed: 0.7 cells/tick. AI step interval: every 2 ticks (fast).
+- Win: 7 points.
+
+**Lose**: AI reaches the win-score first (no `winning()` animation, just exit prompt).
+
+---
+
 ## Game of Life
 
 Conway's Game of Life on a 17×7 toroidal grid (edges wrap). Three sub-modes: **Edit**, **Preset Picker**, **Simulation**.

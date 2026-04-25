@@ -101,6 +101,30 @@ Seitwärts scrollender Shooter. Schiff links, Meteoriten kommen von rechts. Tref
 
 ---
 
+## Pong
+
+Klassisches Schlägerspiel gegen KI. Spielerschläger links (grün), KI-Schläger rechts (blau), cyanfarbener Ball prallt dazwischen.
+
+**Steuerung**
+| Aktion | Taste |
+|---|---|
+| Schläger hoch | X |
+| Schläger runter | Y |
+
+Ball-Spin: Wer den Ball ausserhalb der Schläger-Mitte trifft, gibt vertikale Geschwindigkeit mit. Mit Schläger-Mitte abfangen neutralisiert.
+
+### Lvl-1
+- Ball-Horizontalgeschwindigkeit: 0,5 Zellen/Tick. KI-Schrittintervall: alle 4 Ticks (langsam).
+- Sieg: 5 Punkte.
+
+### Lvl-2
+- Ball-Horizontalgeschwindigkeit: 0,7 Zellen/Tick. KI-Schrittintervall: alle 2 Ticks (schnell).
+- Sieg: 7 Punkte.
+
+**Niederlage**: KI erreicht Punktelimit zuerst (ohne `winning()`-Animation, nur Exit-Prompt).
+
+---
+
 ## Game of Life
 
 Conways "Game of Life" auf einem 17×7-Torus-Gitter (Ränder wrappen). Drei Untermodi: **Editor**, **Preset-Auswahl**, **Simulation**.
