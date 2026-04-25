@@ -7,6 +7,7 @@ from display import Display
 from game_of_life import GameOfLife
 from lampe import Lampe
 from flappy import init_flappy
+from mash_duel import init_mash_duel
 from maze import init_maze
 from pong import init_pong
 from reaction_game import (
@@ -47,6 +48,11 @@ class Menu:
             "Flappy": {
                 "Lvl-1": init_flappy(level=1),
                 "Lvl-2": init_flappy(level=2),
+            },
+            "Duell": {
+                "Lvl-1": init_mash_duel(level=1),
+                "Lvl-2": init_mash_duel(level=2),
+                "Lvl-3": init_mash_duel(level=3),
             },
             "Game of Life": {
                 "Start": GameOfLife,

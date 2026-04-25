@@ -144,6 +144,46 @@ After a death, the score is shown briefly then the exit prompt. Endurance — no
 
 ---
 
+## Duell (Mash Duel) — 2 players
+
+Button-mashing tug-of-war for two players. **Red player** owns A and B. **Blue player** owns X and Y. Long-press is filtered (so the global ABXY exit chord doesn't count).
+
+After a 3/2/1 countdown, the field appears. The match ends as soon as the win condition triggers; the winner's color flashes the screen and a banner ("R" / "B") appears before the exit prompt.
+
+> **Note**: button releases are batched ~0.17 s by the input pipeline, capping the effective mash event rate. Each event still counts every individual button character within the combination, so simultaneous mashing on multiple buttons is rewarded.
+
+### Lvl-1 — Single bar (AB vs XY)
+
+One full-screen bar. Cells left of the boundary are red, cells right are blue, the boundary itself is yellow.
+
+- Each detected combo: A and B characters → red presses; X and Y → blue presses.
+- `pressure ∈ [-1, +1]`, starts at 0. Each red press: `+1/30`. Each blue press: `-1/30`.
+- Boundary column = `8 + round(pressure * 8)`.
+- Win: pressure reaches +1 (boundary at right edge → red wins) or −1 (boundary at left edge → blue wins).
+
+### Lvl-2 — Four independent bars
+
+Four horizontal bars stacked, one per button. Each bar fills left→right based on its own button's press count.
+
+| Row | Bar | Color |
+|---|---|---|
+| 0 | A | red |
+| 1 | X | blue |
+| 2, 3 | separator (dim white) | |
+| 4 | B | red |
+| 5 | Y | blue |
+| 6 | separator (dim white) | |
+
+- Pairings: A vs X (top), B vs Y (bottom). Bars move **independently**.
+- Each bar fills `min(16, count * 17 / 25)` cells. First bar to reach the right edge wins its pairing — and that decides the overall match.
+- Strategy: split focus between your two buttons or commit to one to outpace the opposite bar in that pair.
+
+### Lvl-3 — Endurance (decay)
+
+Same as Lvl-2 plus passive decay: each tick, every count decays by `0.04`. About 0.8 counts/sec — a maxed bar (25) drains in ~31 s if you stop. Forces sustained mashing.
+
+---
+
 ## Game of Life
 
 Conway's Game of Life on a 17×7 toroidal grid (edges wrap). Three sub-modes: **Edit**, **Preset Picker**, **Simulation**.

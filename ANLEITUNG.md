@@ -144,6 +144,46 @@ Nach dem Tod wird der Punktestand kurz angezeigt, dann der Exit-Prompt. Endlossp
 
 ---
 
+## Duell (Mash Duel) — 2 Spieler
+
+Tasten-Hammern als Tauziehen für zwei Spieler. **Roter Spieler** bekommt A und B. **Blauer Spieler** bekommt X und Y. Lang-Druck wird gefiltert (damit der globale ABXY-Ausstiegs-Chord nicht zählt).
+
+Nach 3/2/1-Countdown erscheint das Spielfeld. Der Match endet, sobald die Sieg-Bedingung greift; die Farbe des Gewinners blinkt über den ganzen Bildschirm und ein Banner ("R" / "B") erscheint vor dem Exit-Prompt.
+
+> **Hinweis**: Tastenfreigaben werden vom Input-Pipeline ca. 0,17 s gebündelt — das deckelt die effektive Ereignisrate. Jedes Ereignis zählt aber jedes einzelne Tasten-Zeichen innerhalb der Kombination, also wird gleichzeitiges Hämmern auf mehreren Tasten belohnt.
+
+### Lvl-1 — Einzelbalken (AB gegen XY)
+
+Ein bildschirmfüllender Balken. Zellen links der Grenze sind rot, Zellen rechts blau, die Grenze selbst gelb.
+
+- Pro erkannter Kombo: A- und B-Zeichen → rote Drücke; X und Y → blaue Drücke.
+- `pressure ∈ [-1, +1]`, startet bei 0. Jeder rote Druck: `+1/30`. Jeder blaue Druck: `-1/30`.
+- Grenzspalte = `8 + round(pressure * 8)`.
+- Sieg: `pressure` erreicht +1 (Grenze am rechten Rand → rot gewinnt) oder −1 (Grenze am linken Rand → blau gewinnt).
+
+### Lvl-2 — Vier unabhängige Balken
+
+Vier horizontale Balken übereinander, einer pro Taste. Jeder Balken füllt sich von links nach rechts gemäss seiner eigenen Drückzahl.
+
+| Reihe | Balken | Farbe |
+|---|---|---|
+| 0 | A | rot |
+| 1 | X | blau |
+| 2, 3 | Trenner (gedimmtes Weiss) | |
+| 4 | B | rot |
+| 5 | Y | blau |
+| 6 | Trenner (gedimmtes Weiss) | |
+
+- Paarungen: A gegen X (oben), B gegen Y (unten). Balken bewegen sich **unabhängig**.
+- Jeder Balken füllt `min(16, count * 17 / 25)` Zellen. Der erste Balken, der den rechten Rand erreicht, gewinnt seine Paarung — und entscheidet damit den Gesamt-Match.
+- Strategie: Fokus auf beide Tasten verteilen oder auf eine konzentrieren, um den Gegner-Balken in dieser Paarung zu überholen.
+
+### Lvl-3 — Ausdauer (Decay)
+
+Wie Lvl-2 plus passiver Zerfall: jeden Tick zerfällt jede Drückzahl um `0.04`. Etwa 0,8 Zähler/Sek. — ein voller Balken (25) entleert sich in ca. 31 s, wenn man aufhört. Erzwingt dauerhaftes Hämmern.
+
+---
+
 ## Game of Life
 
 Conways "Game of Life" auf einem 17×7-Torus-Gitter (Ränder wrappen). Drei Untermodi: **Editor**, **Preset-Auswahl**, **Simulation**.
