@@ -41,14 +41,14 @@ class Menu:
             "Game of Life": {
                 "Start": GameOfLife,
             },
-            "Demo": {
-                "Bling-bling": GraphicsDemoAction,
-                "Lampe": Lampe,
-            },
-            "Tests": {
-                "Knopf": Action1,
-                "Knopf-in-Farbe": Action2
-            }
+            # "Demo": {
+            #     "Bling-bling": GraphicsDemoAction,
+            #     "Lampe": Lampe,
+            # },
+            # "Tests": {
+            #     "Knopf": Action1,
+            #     "Knopf-in-Farbe": Action2
+            # }
         }
         self.menu_list_main = list(self.menu_map)
         self.menu_list_sub = [list(sub) for sub in self.menu_map.values()]
