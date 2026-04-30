@@ -26,7 +26,7 @@ class Menu:
     def __init__(self, menu_queue, action_queue, display: Display):
         self.menu_map = {
             "Labyrinth": {
-                f"Lvl-{i}":init_maze(level=i) for i in range(10)[1:]
+                f"Lvl-{i}":init_maze(level=i) for i in range(1, 16)
             },
             "Reaktion": {
                 "Lvl-1": ReactionLevelOne,
